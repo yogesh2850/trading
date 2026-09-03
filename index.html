@@ -1,179 +1,209 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Trading Portal — final-v8rec</title>
+<title>Trading Portal — Top S&P Stocks Best Strategy</title>
 <style>
 .viz-root{color-scheme:light;
  --surface-1:#fcfcfb;--surface-2:#f0efec;--text-primary:#0b0b0b;
  --text-secondary:#52514e;--grid:#e4e3df;--series-1:#2a78d6;--series-2:#eb6834;
- --pos:#2a78d6;--neg:#d03b3b;--good:#0ca30c;--warn:#fab219;
+ --pos:#2a78d6;--neg:#d03b3b;--good:#0ca30c;
  font-family:system-ui,-apple-system,sans-serif;background:var(--surface-1);
- color:var(--text-primary);margin:0;padding:24px;min-height:100vh}
+ color:var(--text-primary);margin:0;padding:22px;min-height:100vh}
 @media (prefers-color-scheme: dark){:root:where(:not([data-theme="light"])) .viz-root{
  color-scheme:dark;--surface-1:#1a1a19;--surface-2:#262624;--text-primary:#fff;
  --text-secondary:#c3c2b7;--grid:#33332f;--series-1:#3987e5;--series-2:#d95926}}
 :root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#1a1a19;
  --surface-2:#262624;--text-primary:#fff;--text-secondary:#c3c2b7;--grid:#33332f;
  --series-1:#3987e5;--series-2:#d95926}
-h1{font-size:20px;margin:0 0 2px}
-.sub{color:var(--text-secondary);font-size:12px;margin-bottom:20px}
-.row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
-.tile{background:var(--surface-2);border-radius:10px;padding:14px 18px;min-width:150px}
-.tile .k{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em}
-.tile .v{font-size:26px;font-weight:650;margin-top:4px}
-.tile .h{font-size:11px;color:var(--text-secondary);margin-top:3px}
-.card{background:var(--surface-2);border-radius:10px;padding:16px 18px;margin-bottom:20px}
-.card h2{font-size:13px;margin:0 0 10px;color:var(--text-secondary);
+h1{font-size:19px;margin:0 0 2px}
+.sub{color:var(--text-secondary);font-size:12px;margin-bottom:14px}
+.tabs{display:flex;gap:6px;margin-bottom:18px}
+.tab{background:var(--surface-2);border:1px solid var(--grid);cursor:pointer;
+ padding:8px 18px;border-radius:8px;font-size:13px;color:var(--text-secondary)}
+.tab.active{background:var(--series-1);color:#fff;border-color:var(--series-1)}
+.pane{display:none}.pane.active{display:block}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.tile{background:var(--surface-2);border-radius:10px;padding:12px 16px;min-width:140px}
+.tile .k{font-size:10px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font-size:24px;font-weight:650;margin-top:3px}
+.tile .h{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.card{background:var(--surface-2);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.card h2{font-size:12px;margin:0 0 8px;color:var(--text-secondary);
  text-transform:uppercase;letter-spacing:.05em}
 svg{display:block;width:100%}
 .gridline{stroke:var(--grid);stroke-width:1}
 .axis{fill:var(--text-secondary);font-size:10px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{color:var(--text-secondary);text-align:left;font-weight:500;font-size:11px;
- text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-bottom:1px solid var(--grid)}
-td{padding:7px 10px;border-bottom:1px solid var(--grid)}
+th{color:var(--text-secondary);text-align:left;font-weight:500;font-size:10px;
+ text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--grid)}
+td{padding:6px 8px;border-bottom:1px solid var(--grid)}
 td.num{text-align:right;font-variant-numeric:tabular-nums}
-.bar-track{background:var(--grid);border-radius:4px;height:8px;overflow:hidden;margin-top:6px}
+.bar-track{background:var(--grid);border-radius:4px;height:8px;overflow:hidden;margin-top:5px}
 .bar-fill{height:100%;border-radius:4px;background:var(--series-1)}
 .tip{position:fixed;pointer-events:none;background:var(--text-primary);
  color:var(--surface-1);padding:6px 9px;border-radius:6px;font-size:12px;
  opacity:0;transition:opacity .08s;z-index:9;white-space:nowrap}
-.toggle{position:absolute;top:22px;right:24px;background:var(--surface-2);
+.toggle{position:absolute;top:20px;right:22px;background:var(--surface-2);
  border:1px solid var(--grid);color:var(--text-primary);border-radius:8px;
- padding:6px 12px;cursor:pointer;font-size:12px}
-.chip{display:inline-block;background:var(--surface-2);border-radius:99px;
- padding:3px 10px;font-size:11px;color:var(--text-secondary);margin-right:6px}
-.pos{color:var(--good)} .neg{color:var(--neg)}
-.legend{display:flex;gap:16px;font-size:11px;color:var(--text-secondary);margin-bottom:6px}
+ padding:5px 11px;cursor:pointer;font-size:12px}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-bottom:6px}
 .legend span::before{content:"";display:inline-block;width:10px;height:10px;
  border-radius:3px;margin-right:5px;vertical-align:-1px}
-.legend .l1::before{background:var(--series-1)} .legend .l2::before{background:var(--series-2)}
+.legend .l1::before{background:var(--series-1)}.legend .l2::before{background:var(--series-2)}
+.pos{color:var(--good)}.neg{color:var(--neg)}
+.rules{font-size:13px;line-height:1.55}
+.rules code{background:var(--surface-1);padding:1px 5px;border-radius:4px}
 </style></head>
 <body class="viz-root">
-<button class="toggle" onclick="tog()">◐ theme</button>
-<h1>📊 Trading Portal — Overnight Gap Rank-Hold (final-v8rec)</h1>
-<div class="sub">PAPER TRADING PHASE · frozen 2026-09-02 · updated 2026-09-03 03:15 ·
-<span class="chip">no stops</span><span class="chip">no regime gate</span>
-<span class="chip">entry 10:00 &gt; VWAP</span><span class="chip">exit next 09:35</span></div>
+<button class="toggle" onclick="tog()">◐</button>
+<h1>📊 Top S&amp;P Stocks Best Strategy — Paper Phase</h1>
+<div class="sub">frozen 2026-09-02 · causal · Alpaca paper live · updated 2026-09-03 04:22</div>
+<div class="tabs">
+ <div class="tab active" data-p="daily" onclick="show('daily')">Daily</div>
+ <div class="tab" data-p="monthly" onclick="show('monthly')">Monthly</div>
+ <div class="tab" data-p="strategy" onclick="show('strategy')">Strategy</div>
+</div>
 
-<div class="row" id="tiles"></div>
+<div class="pane active" id="p-daily">
+ <div class="row" id="tiles"></div>
+ <div class="card"><h2>Daily P&amp;L — expected (model) vs actual (fills)</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="pnl" height="170" viewBox="0 0 960 170"></svg></div>
+ <div class="card"><h2>Paper equity — growth of $100k</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="eq" height="190" viewBox="0 0 960 190" preserveAspectRatio="none"></svg></div>
+ <div class="card"><h2>Gate progress</h2><div id="gates"></div></div>
+ <div class="card"><h2>Journal (newest first)</h2>
+  <table><thead><tr><th>date</th><th>picks</th><th style="text-align:right">expected</th>
+  <th style="text-align:right">actual</th><th style="text-align:right">slip (bps)</th></tr>
+  </thead><tbody id="jb"></tbody></table></div>
+</div>
 
-<div class="card"><h2>Frozen reference — 6 years of the strategy (growth of $1, clean data)</h2>
-<div class="legend"><span class="l1">reference equity (2020–24 + holdout)</span></div>
-<svg id="eq" height="240" viewBox="0 0 960 240" preserveAspectRatio="none"></svg></div>
+<div class="pane" id="p-monthly">
+ <div class="card"><h2>Monthly P&amp;L</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="mbars" height="200" viewBox="0 0 960 200"></svg></div>
+ <div class="card"><h2>Monthly detail</h2>
+  <table><thead><tr><th>month</th><th style="text-align:right">expected</th>
+  <th style="text-align:right">actual</th><th style="text-align:right">days</th>
+  <th style="text-align:right">traded</th><th style="text-align:right">win-day %</th></tr>
+  </thead><tbody id="mb"></tbody></table></div>
+</div>
 
-<div class="card"><h2>Paper phase — daily P&amp;L (expected vs actual)</h2>
-<div class="legend"><span class="l1">expected (model)</span><span class="l2">actual (QC fills)</span></div>
-<svg id="pnl" height="180" viewBox="0 0 960 180"></svg></div>
+<div class="pane" id="p-strategy">
+ <div class="card rules"><h2>The frozen strategy</h2>
+  <p><b>score = 0.883·z(|open gap|) + 0.087·z(prev-day volume) + 0.030·z(earnings recency)</b><br>
+  Top-5 pool → score ≥ 0.97 → buy ≤4 at <b>10:00 ET</b> only if above session VWAP
+  (causal: 09:59 vs VWAP-to-10:00) → equal weight, 20% cap → hold overnight →
+  sell <b>next day 09:35 ET</b>. No stops · no regime gate · no switching · cash days allowed.</p></div>
+ <div class="card rules"><h2>Corrected evidence (post lookahead audit 2026-09-03)</h2>
+  <p>2024–26 causal: <b>+37.9%/18mo</b> — matches QuantConnect's independent +36.4% ✓<br>
+  2020–24 causal: +1.8%/fold — deep-history robustness <b>not</b> demonstrated<br>
+  Holdout Jun–Aug 26 causal: +0.8% vs SPY +0.8% — no edge shown that quarter<br>
+  <b>Verdict: real, externally replicated recent-era edge; this paper phase is the primary evidence.</b></p></div>
+ <div class="card rules"><h2>Tested and rejected (~3,700 registered trials)</h2>
+  <p>Stops (kill 45–66% of winners) · intraday exits/switching · weak-close cuts
+  (losers bounce overnight) · earnings avoidance · news exits (bad news → better
+  overnights) · losing-streak pauses (streaks predict <i>better</i> days) ·
+  fades (3 forms) · Fib pullbacks · hourly cadence · meta-labeling ·
+  vol-scaling · sector caps. <b>The edge is the unadorned rank-and-hold.</b></p></div>
+</div>
 
-<div class="card"><h2>Gate progress</h2><div id="gates"></div></div>
-
-<div class="card"><h2>Journal (newest first)</h2>
-<table><thead><tr><th>entry date</th><th>picks</th><th style="text-align:right">expected</th>
-<th style="text-align:right">actual</th></tr></thead><tbody id="jb"></tbody></table></div>
-
-<div class="sub">Pass gate: no degradation (≥20 live sessions) · slippage ≤10 bps ·
-fills ≥95% · Sharpe &gt; 0. A red week/month is expected behavior — no intervention
-before the statistical test says DEGRADED.</div>
 <div class="tip" id="tip"></div>
 <script>
-const D = {"updated": "2026-09-03 03:15", "ref": [{"d": "2020-07-27", "v": 1.0}, {"d": "2020-07-29", "v": 1.0212}, {"d": "2020-07-31", "v": 1.0334}, {"d": "2020-08-04", "v": 1.0357}, {"d": "2020-08-06", "v": 1.0243}, {"d": "2020-08-10", "v": 1.0862}, {"d": "2020-08-12", "v": 1.1085}, {"d": "2020-08-14", "v": 1.1211}, {"d": "2020-08-18", "v": 1.1423}, {"d": "2020-08-20", "v": 1.1476}, {"d": "2020-08-24", "v": 1.1731}, {"d": "2020-08-26", "v": 1.2112}, {"d": "2020-08-28", "v": 1.2159}, {"d": "2020-09-01", "v": 1.2195}, {"d": "2020-09-03", "v": 1.1888}, {"d": "2020-09-08", "v": 1.165}, {"d": "2020-09-10", "v": 1.1724}, {"d": "2020-09-14", "v": 1.1825}, {"d": "2020-09-16", "v": 1.1381}, {"d": "2020-09-18", "v": 1.1234}, {"d": "2020-09-22", "v": 1.1127}, {"d": "2020-09-24", "v": 1.1201}, {"d": "2020-09-28", "v": 1.1529}, {"d": "2020-09-30", "v": 1.1625}, {"d": "2020-10-02", "v": 1.1555}, {"d": "2020-10-06", "v": 1.1426}, {"d": "2020-10-08", "v": 1.1445}, {"d": "2020-10-12", "v": 1.1585}, {"d": "2020-10-14", "v": 1.1201}, {"d": "2020-10-16", "v": 1.1378}, {"d": "2020-10-20", "v": 1.115}, {"d": "2020-10-22", "v": 1.1186}, {"d": "2020-10-26", "v": 1.0901}, {"d": "2020-10-28", "v": 1.0688}, {"d": "2020-10-30", "v": 1.0728}, {"d": "2020-11-03", "v": 1.0672}, {"d": "2020-11-05", "v": 1.0848}, {"d": "2020-11-09", "v": 1.1713}, {"d": "2020-11-11", "v": 1.2254}, {"d": "2020-11-13", "v": 1.2343}, {"d": "2020-11-17", "v": 1.2348}, {"d": "2020-11-19", "v": 1.2082}, {"d": "2020-11-23", "v": 1.2556}, {"d": "2020-11-25", "v": 1.257}, {"d": "2020-11-30", "v": 1.2544}, {"d": "2020-12-02", "v": 1.2641}, {"d": "2020-12-04", "v": 1.2651}, {"d": "2020-12-08", "v": 1.3046}, {"d": "2020-12-10", "v": 1.3054}, {"d": "2020-12-14", "v": 1.3069}, {"d": "2020-12-16", "v": 1.3341}, {"d": "2020-12-18", "v": 1.3316}, {"d": "2020-12-22", "v": 1.3331}, {"d": "2020-12-24", "v": 1.3353}, {"d": "2020-12-29", "v": 1.326}, {"d": "2020-12-31", "v": 1.3388}, {"d": "2021-01-05", "v": 1.3618}, {"d": "2021-01-07", "v": 1.4083}, {"d": "2021-01-11", "v": 1.3857}, {"d": "2021-01-13", "v": 1.3942}, {"d": "2021-01-15", "v": 1.3892}, {"d": "2021-01-20", "v": 1.3999}, {"d": "2021-01-22", "v": 1.4002}, {"d": "2021-01-26", "v": 1.3923}, {"d": "2021-01-28", "v": 1.3923}, {"d": "2021-02-01", "v": 1.386}, {"d": "2021-02-03", "v": 1.3738}, {"d": "2021-02-05", "v": 1.4205}, {"d": "2021-02-09", "v": 1.4254}, {"d": "2021-02-11", "v": 1.4386}, {"d": "2021-02-16", "v": 1.4431}, {"d": "2021-02-18", "v": 1.4377}, {"d": "2021-02-22", "v": 1.4192}, {"d": "2021-02-24", "v": 1.4758}, {"d": "2021-02-26", "v": 1.4737}, {"d": "2021-03-02", "v": 1.4276}, {"d": "2021-03-04", "v": 1.422}, {"d": "2021-03-08", "v": 1.4343}, {"d": "2021-03-10", "v": 1.4998}, {"d": "2021-03-12", "v": 1.4953}, {"d": "2021-03-16", "v": 1.4744}, {"d": "2021-03-18", "v": 1.4454}, {"d": "2021-03-22", "v": 1.4301}, {"d": "2021-03-24", "v": 1.4092}, {"d": "2021-03-26", "v": 1.4583}, {"d": "2021-03-30", "v": 1.494}, {"d": "2021-04-01", "v": 1.525}, {"d": "2021-04-06", "v": 1.5023}, {"d": "2021-04-08", "v": 1.4974}, {"d": "2021-04-12", "v": 1.5106}, {"d": "2021-04-14", "v": 1.5211}, {"d": "2021-04-16", "v": 1.5063}, {"d": "2021-04-20", "v": 1.5063}, {"d": "2021-04-22", "v": 1.5224}, {"d": "2021-04-26", "v": 1.5397}, {"d": "2021-04-28", "v": 1.531}, {"d": "2021-04-30", "v": 1.5268}, {"d": "2021-05-04", "v": 1.5371}, {"d": "2021-05-06", "v": 1.5431}, {"d": "2021-05-10", "v": 1.549}, {"d": "2021-05-12", "v": 1.536}, {"d": "2021-05-14", "v": 1.544}, {"d": "2021-05-18", "v": 1.4815}, {"d": "2021-05-20", "v": 1.5204}, {"d": "2021-05-24", "v": 1.5176}, {"d": "2021-05-26", "v": 1.5142}, {"d": "2021-05-28", "v": 1.4966}, {"d": "2021-06-02", "v": 1.48}, {"d": "2021-06-04", "v": 1.4844}, {"d": "2021-06-08", "v": 1.4855}, {"d": "2021-06-10", "v": 1.5118}, {"d": "2021-06-14", "v": 1.5021}, {"d": "2021-06-16", "v": 1.496}, {"d": "2021-06-18", "v": 1.5055}, {"d": "2021-06-22", "v": 1.5208}, {"d": "2021-06-24", "v": 1.5271}, {"d": "2021-06-28", "v": 1.5333}, {"d": "2021-06-30", "v": 1.5215}, {"d": "2021-07-02", "v": 1.5077}, {"d": "2021-07-07", "v": 1.4948}, {"d": "2021-07-09", "v": 1.5016}, {"d": "2021-07-13", "v": 1.4956}, {"d": "2021-07-15", "v": 1.4785}, {"d": "2021-07-19", "v": 1.4773}, {"d": "2021-07-21", "v": 1.4657}, {"d": "2021-07-23", "v": 1.486}, {"d": "2021-07-27", "v": 1.4864}, {"d": "2021-07-29", "v": 1.4982}, {"d": "2021-08-02", "v": 1.5113}, {"d": "2021-08-04", "v": 1.5198}, {"d": "2021-08-06", "v": 1.5005}, {"d": "2021-08-10", "v": 1.5093}, {"d": "2021-08-12", "v": 1.4936}, {"d": "2021-08-16", "v": 1.501}, {"d": "2021-08-18", "v": 1.5019}, {"d": "2021-08-20", "v": 1.5443}, {"d": "2021-08-24", "v": 1.551}, {"d": "2021-08-26", "v": 1.5449}, {"d": "2021-08-30", "v": 1.5512}, {"d": "2021-09-01", "v": 1.5536}, {"d": "2021-09-03", "v": 1.5502}, {"d": "2021-09-08", "v": 1.5479}, {"d": "2021-09-10", "v": 1.5414}, {"d": "2021-09-14", "v": 1.5465}, {"d": "2021-09-16", "v": 1.5433}, {"d": "2021-09-20", "v": 1.5338}, {"d": "2021-09-22", "v": 1.5358}, {"d": "2021-09-24", "v": 1.5629}, {"d": "2021-09-28", "v": 1.5687}, {"d": "2021-09-30", "v": 1.5509}, {"d": "2021-10-04", "v": 1.5395}, {"d": "2021-10-06", "v": 1.539}, {"d": "2021-10-08", "v": 1.5353}, {"d": "2021-10-12", "v": 1.5318}, {"d": "2021-10-14", "v": 1.5624}, {"d": "2021-10-18", "v": 1.5685}, {"d": "2021-10-20", "v": 1.579}, {"d": "2021-10-22", "v": 1.5835}, {"d": "2021-10-26", "v": 1.5808}, {"d": "2021-10-28", "v": 1.5616}, {"d": "2021-11-01", "v": 1.5787}, {"d": "2021-11-03", "v": 1.5944}, {"d": "2021-11-05", "v": 1.6269}, {"d": "2021-11-09", "v": 1.6335}, {"d": "2021-11-11", "v": 1.611}, {"d": "2021-11-15", "v": 1.5994}, {"d": "2021-11-17", "v": 1.6231}, {"d": "2021-11-19", "v": 1.6094}, {"d": "2021-11-23", "v": 1.574}, {"d": "2021-11-26", "v": 1.5646}, {"d": "2021-11-30", "v": 1.5682}, {"d": "2021-12-02", "v": 1.5343}, {"d": "2021-12-06", "v": 1.5719}, {"d": "2021-12-08", "v": 1.5689}, {"d": "2021-12-10", "v": 1.5702}, {"d": "2021-12-14", "v": 1.5651}, {"d": "2021-12-16", "v": 1.5582}, {"d": "2021-12-20", "v": 1.5675}, {"d": "2021-12-22", "v": 1.5926}, {"d": "2021-12-27", "v": 1.6116}, {"d": "2021-12-29", "v": 1.6096}, {"d": "2021-12-31", "v": 1.6106}, {"d": "2022-01-04", "v": 1.6516}, {"d": "2022-01-06", "v": 1.5995}, {"d": "2022-01-10", "v": 1.5629}, {"d": "2022-01-12", "v": 1.5852}, {"d": "2022-01-14", "v": 1.5559}, {"d": "2022-01-19", "v": 1.553}, {"d": "2022-01-21", "v": 1.5133}, {"d": "2022-01-25", "v": 1.5133}, {"d": "2022-01-27", "v": 1.4853}, {"d": "2022-01-31", "v": 1.5478}, {"d": "2022-02-02", "v": 1.5211}, {"d": "2022-02-04", "v": 1.5162}, {"d": "2022-02-08", "v": 1.5318}, {"d": "2022-02-10", "v": 1.5001}, {"d": "2022-02-14", "v": 1.4698}, {"d": "2022-02-16", "v": 1.447}, {"d": "2022-02-18", "v": 1.4279}, {"d": "2022-02-23", "v": 1.4085}, {"d": "2022-02-25", "v": 1.4905}, {"d": "2022-03-01", "v": 1.4822}, {"d": "2022-03-03", "v": 1.4771}, {"d": "2022-03-07", "v": 1.4585}, {"d": "2022-03-09", "v": 1.4759}, {"d": "2022-03-11", "v": 1.4858}, {"d": "2022-03-15", "v": 1.486}, {"d": "2022-03-17", "v": 1.4543}, {"d": "2022-03-21", "v": 1.4724}, {"d": "2022-03-23", "v": 1.4473}, {"d": "2022-03-25", "v": 1.4724}, {"d": "2022-03-29", "v": 1.4836}, {"d": "2022-03-31", "v": 1.44}, {"d": "2022-04-04", "v": 1.4363}, {"d": "2022-04-06", "v": 1.4154}, {"d": "2022-04-08", "v": 1.4186}, {"d": "2022-04-12", "v": 1.3747}, {"d": "2022-04-14", "v": 1.3677}, {"d": "2022-04-19", "v": 1.289}, {"d": "2022-04-21", "v": 1.2947}, {"d": "2022-04-25", "v": 1.2966}, {"d": "2022-04-27", "v": 1.2731}, {"d": "2022-04-29", "v": 1.2473}, {"d": "2022-05-03", "v": 1.2605}, {"d": "2022-05-05", "v": 1.2687}, {"d": "2022-05-09", "v": 1.2653}, {"d": "2022-05-11", "v": 1.201}, {"d": "2022-05-13", "v": 1.2515}, {"d": "2022-05-17", "v": 1.208}, {"d": "2022-05-19", "v": 1.2339}, {"d": "2022-05-23", "v": 1.23}, {"d": "2022-05-25", "v": 1.254}, {"d": "2022-05-27", "v": 1.2878}, {"d": "2022-06-01", "v": 1.2858}, {"d": "2022-06-03", "v": 1.3081}, {"d": "2022-06-07", "v": 1.2748}, {"d": "2022-06-09", "v": 1.1963}, {"d": "2022-06-13", "v": 1.1862}, {"d": "2022-06-15", "v": 1.1638}, {"d": "2022-06-17", "v": 1.1755}, {"d": "2022-06-22", "v": 1.1636}, {"d": "2022-06-24", "v": 1.1943}, {"d": "2022-06-28", "v": 1.1888}, {"d": "2022-06-30", "v": 1.1716}, {"d": "2022-07-05", "v": 1.1648}, {"d": "2022-07-07", "v": 1.1716}, {"d": "2022-07-11", "v": 1.1577}, {"d": "2022-07-13", "v": 1.127}, {"d": "2022-07-15", "v": 1.1879}, {"d": "2022-07-19", "v": 1.1914}, {"d": "2022-07-21", "v": 1.2035}, {"d": "2022-07-25", "v": 1.2207}, {"d": "2022-07-27", "v": 1.2441}, {"d": "2022-07-29", "v": 1.2426}, {"d": "2022-08-02", "v": 1.2449}, {"d": "2022-08-04", "v": 1.2575}, {"d": "2022-08-08", "v": 1.2067}, {"d": "2022-08-10", "v": 1.2474}, {"d": "2022-08-12", "v": 1.2691}, {"d": "2022-08-16", "v": 1.2761}, {"d": "2022-08-18", "v": 1.2563}, {"d": "2022-08-22", "v": 1.2551}, {"d": "2022-08-24", "v": 1.2581}, {"d": "2022-08-26", "v": 1.286}, {"d": "2022-08-30", "v": 1.2955}, {"d": "2022-09-01", "v": 1.2822}, {"d": "2022-09-06", "v": 1.2768}, {"d": "2022-09-08", "v": 1.3139}, {"d": "2022-09-12", "v": 1.3218}, {"d": "2022-09-14", "v": 1.3136}, {"d": "2022-09-16", "v": 1.2889}, {"d": "2022-09-20", "v": 1.2912}, {"d": "2022-09-22", "v": 1.2689}, {"d": "2022-09-26", "v": 1.276}, {"d": "2022-09-28", "v": 1.2812}, {"d": "2022-09-30", "v": 1.2764}, {"d": "2022-10-04", "v": 1.2729}, {"d": "2022-10-06", "v": 1.2717}, {"d": "2022-10-10", "v": 1.2717}, {"d": "2022-10-12", "v": 1.2515}, {"d": "2022-10-14", "v": 1.3137}, {"d": "2022-10-18", "v": 1.3293}, {"d": "2022-10-20", "v": 1.3301}, {"d": "2022-10-24", "v": 1.3264}, {"d": "2022-10-26", "v": 1.3512}, {"d": "2022-10-28", "v": 1.3715}, {"d": "2022-11-01", "v": 1.3868}, {"d": "2022-11-03", "v": 1.3506}, {"d": "2022-11-07", "v": 1.3686}, {"d": "2022-11-09", "v": 1.4099}, {"d": "2022-11-11", "v": 1.4657}, {"d": "2022-11-15", "v": 1.4802}, {"d": "2022-11-17", "v": 1.4988}, {"d": "2022-11-21", "v": 1.5138}, {"d": "2022-11-23", "v": 1.5224}, {"d": "2022-11-28", "v": 1.5252}, {"d": "2022-11-30", "v": 1.5536}, {"d": "2022-12-02", "v": 1.5528}, {"d": "2022-12-06", "v": 1.5574}, {"d": "2022-12-08", "v": 1.5537}, {"d": "2022-12-12", "v": 1.594}, {"d": "2022-12-14", "v": 1.5559}, {"d": "2022-12-16", "v": 1.5431}, {"d": "2022-12-20", "v": 1.52}, {"d": "2022-12-22", "v": 1.5191}, {"d": "2022-12-27", "v": 1.5536}, {"d": "2022-12-29", "v": 1.5627}, {"d": "2023-01-03", "v": 1.6064}, {"d": "2023-01-05", "v": 1.5949}, {"d": "2023-01-09", "v": 1.6377}, {"d": "2023-01-11", "v": 1.6474}, {"d": "2023-01-13", "v": 1.7137}, {"d": "2023-01-18", "v": 1.6575}, {"d": "2023-01-20", "v": 1.6944}, {"d": "2023-01-24", "v": 1.7025}, {"d": "2023-01-26", "v": 1.695}, {"d": "2023-01-30", "v": 1.698}, {"d": "2023-02-01", "v": 1.7482}, {"d": "2023-02-03", "v": 1.7287}, {"d": "2023-02-07", "v": 1.7385}, {"d": "2023-02-09", "v": 1.6971}, {"d": "2023-02-13", "v": 1.6956}, {"d": "2023-02-15", "v": 1.7278}, {"d": "2023-02-17", "v": 1.6981}, {"d": "2023-02-22", "v": 1.6927}, {"d": "2023-02-24", "v": 1.7282}, {"d": "2023-02-28", "v": 1.7199}, {"d": "2023-03-02", "v": 1.7286}, {"d": "2023-03-06", "v": 1.7458}, {"d": "2023-03-08", "v": 1.7613}, {"d": "2023-03-10", "v": 1.673}, {"d": "2023-03-14", "v": 1.7557}, {"d": "2023-03-16", "v": 1.7384}, {"d": "2023-03-20", "v": 1.7581}, {"d": "2023-03-22", "v": 1.7343}, {"d": "2023-03-24", "v": 1.7805}, {"d": "2023-03-28", "v": 1.7896}, {"d": "2023-03-30", "v": 1.7882}, {"d": "2023-04-03", "v": 1.7796}, {"d": "2023-04-05", "v": 1.7644}, {"d": "2023-04-10", "v": 1.7983}, {"d": "2023-04-12", "v": 1.803}, {"d": "2023-04-14", "v": 1.8052}, {"d": "2023-04-18", "v": 1.81}, {"d": "2023-04-20", "v": 1.8229}, {"d": "2023-04-24", "v": 1.817}, {"d": "2023-04-26", "v": 1.817}, {"d": "2023-04-28", "v": 1.8397}, {"d": "2023-05-02", "v": 1.8028}, {"d": "2023-05-04", "v": 1.7946}, {"d": "2023-05-08", "v": 1.8445}, {"d": "2023-05-10", "v": 1.8476}, {"d": "2023-05-12", "v": 1.8216}, {"d": "2023-05-16", "v": 1.8382}, {"d": "2023-05-18", "v": 1.9259}, {"d": "2023-05-22", "v": 1.8889}, {"d": "2023-05-24", "v": 1.8411}, {"d": "2023-05-26", "v": 1.9521}, {"d": "2023-05-31", "v": 1.9425}, {"d": "2023-06-02", "v": 2.0039}, {"d": "2023-06-06", "v": 2.0093}, {"d": "2023-06-08", "v": 1.9928}, {"d": "2023-06-12", "v": 2.0373}, {"d": "2023-06-14", "v": 2.0475}, {"d": "2023-06-16", "v": 2.0576}, {"d": "2023-06-21", "v": 2.0505}, {"d": "2023-06-23", "v": 2.056}, {"d": "2023-06-27", "v": 2.0283}, {"d": "2023-06-29", "v": 2.0544}, {"d": "2023-07-03", "v": 2.0619}, {"d": "2023-07-06", "v": 2.0427}, {"d": "2023-07-10", "v": 2.0318}, {"d": "2023-07-12", "v": 2.0554}, {"d": "2023-07-14", "v": 2.0673}, {"d": "2023-07-18", "v": 2.084}, {"d": "2023-07-20", "v": 2.0854}, {"d": "2023-07-24", "v": 2.1019}, {"d": "2023-07-26", "v": 2.081}, {"d": "2023-07-28", "v": 2.0725}, {"d": "2023-08-01", "v": 2.0554}, {"d": "2023-08-03", "v": 2.0422}, {"d": "2023-08-07", "v": 2.0481}, {"d": "2023-08-09", "v": 2.0431}, {"d": "2023-08-11", "v": 1.9833}, {"d": "2023-08-15", "v": 1.9994}, {"d": "2023-08-17", "v": 1.9768}, {"d": "2023-08-21", "v": 2.1122}, {"d": "2023-08-23", "v": 2.1079}, {"d": "2023-08-25", "v": 2.099}, {"d": "2023-08-29", "v": 2.119}, {"d": "2023-08-31", "v": 2.1198}, {"d": "2023-09-05", "v": 2.1249}, {"d": "2023-09-07", "v": 2.1262}, {"d": "2023-09-11", "v": 2.1408}, {"d": "2023-09-13", "v": 2.1295}, {"d": "2023-09-15", "v": 2.1088}, {"d": "2023-09-19", "v": 2.0996}, {"d": "2023-09-21", "v": 2.0538}, {"d": "2023-09-25", "v": 2.0147}, {"d": "2023-09-27", "v": 2.0268}, {"d": "2023-09-29", "v": 2.0885}, {"d": "2023-10-03", "v": 2.0752}, {"d": "2023-10-05", "v": 2.0423}, {"d": "2023-10-09", "v": 2.0839}, {"d": "2023-10-11", "v": 2.1005}, {"d": "2023-10-13", "v": 2.1037}, {"d": "2023-10-17", "v": 2.1158}, {"d": "2023-10-19", "v": 2.1269}, {"d": "2023-10-23", "v": 2.1193}, {"d": "2023-10-25", "v": 2.048}, {"d": "2023-10-27", "v": 1.9992}, {"d": "2023-10-31", "v": 1.9666}, {"d": "2023-11-02", "v": 1.9897}, {"d": "2023-11-06", "v": 1.9637}, {"d": "2023-11-08", "v": 1.9601}, {"d": "2023-11-10", "v": 1.9547}, {"d": "2023-11-14", "v": 1.9746}, {"d": "2023-11-16", "v": 1.9729}, {"d": "2023-11-20", "v": 1.9971}, {"d": "2023-11-22", "v": 2.0138}, {"d": "2023-11-27", "v": 2.0058}, {"d": "2023-11-29", "v": 2.0516}, {"d": "2023-12-01", "v": 2.0785}, {"d": "2023-12-05", "v": 2.0753}, {"d": "2023-12-07", "v": 2.042}, {"d": "2023-12-11", "v": 2.0274}, {"d": "2023-12-13", "v": 2.0536}, {"d": "2023-12-15", "v": 2.0673}, {"d": "2023-12-19", "v": 2.0794}, {"d": "2023-12-21", "v": 2.0705}, {"d": "2023-12-26", "v": 2.095}, {"d": "2023-12-28", "v": 2.1091}, {"d": "2024-01-02", "v": 2.0368}, {"d": "2024-01-04", "v": 2.0504}, {"d": "2024-01-08", "v": 2.0622}, {"d": "2024-01-10", "v": 2.0742}, {"d": "2024-01-12", "v": 2.0509}, {"d": "2024-01-17", "v": 2.0674}, {"d": "2024-01-19", "v": 2.1445}, {"d": "2024-01-23", "v": 2.1228}, {"d": "2024-01-25", "v": 2.1268}, {"d": "2024-01-29", "v": 2.1379}, {"d": "2024-01-31", "v": 2.127}, {"d": "2024-02-02", "v": 2.0993}, {"d": "2024-02-06", "v": 2.1441}, {"d": "2024-02-08", "v": 2.1969}, {"d": "2024-02-12", "v": 2.1844}, {"d": "2024-02-14", "v": 2.2198}, {"d": "2024-02-16", "v": 2.2195}, {"d": "2024-02-21", "v": 2.2218}, {"d": "2024-02-23", "v": 2.3042}, {"d": "2024-02-27", "v": 2.2941}, {"d": "2024-02-29", "v": 2.3512}, {"d": "2024-03-04", "v": 2.3933}, {"d": "2024-03-06", "v": 2.4212}, {"d": "2024-03-08", "v": 2.3898}, {"d": "2024-03-12", "v": 2.3954}, {"d": "2024-03-14", "v": 2.3779}, {"d": "2024-03-18", "v": 2.3968}, {"d": "2024-03-20", "v": 2.4701}, {"d": "2024-03-22", "v": 2.4801}, {"d": "2024-03-26", "v": 2.4974}, {"d": "2024-03-28", "v": 2.5011}, {"d": "2024-04-02", "v": 2.49}, {"d": "2024-04-04", "v": 2.4731}, {"d": "2024-04-08", "v": 2.476}, {"d": "2024-04-10", "v": 2.4721}, {"d": "2024-04-12", "v": 2.4897}, {"d": "2024-04-16", "v": 2.512}, {"d": "2024-04-18", "v": 2.4989}, {"d": "2024-04-22", "v": 2.4639}, {"d": "2024-04-24", "v": 2.4844}, {"d": "2024-04-26", "v": 2.6475}, {"d": "2024-04-30", "v": 2.6131}, {"d": "2024-05-02", "v": 2.6359}, {"d": "2024-05-06", "v": 2.5673}, {"d": "2024-05-08", "v": 2.6001}, {"d": "2024-05-10", "v": 2.6079}, {"d": "2024-05-14", "v": 2.6437}, {"d": "2024-05-16", "v": 2.6557}, {"d": "2024-05-20", "v": 2.6227}, {"d": "2024-05-22", "v": 2.6132}, {"d": "2024-05-24", "v": 2.5978}, {"d": "2024-05-29", "v": 2.5836}, {"d": "2024-05-31", "v": 2.6194}, {"d": "2024-06-04", "v": 2.6176}, {"d": "2024-06-06", "v": 2.6261}, {"d": "2024-06-10", "v": 2.6227}, {"d": "2024-06-12", "v": 2.615}, {"d": "2024-06-14", "v": 2.594}, {"d": "2024-06-18", "v": 2.5798}, {"d": "2024-06-21", "v": 2.4983}, {"d": "2024-06-25", "v": 2.4825}, {"d": "2024-06-27", "v": 2.4739}, {"d": "2024-07-01", "v": 2.5001}, {"d": "2024-07-03", "v": 2.5278}, {"d": "2024-07-08", "v": 2.5617}, {"d": "2024-07-10", "v": 2.5701}, {"d": "2024-07-12", "v": 2.6359}, {"d": "2024-07-16", "v": 2.5552}, {"d": "2024-07-18", "v": 2.4904}, {"d": "2024-07-22", "v": 2.5314}, {"d": "2024-07-24", "v": 2.5041}, {"d": "2024-07-26", "v": 2.5182}, {"d": "2024-07-30", "v": 2.5037}, {"d": "2024-08-01", "v": 2.4696}, {"d": "2024-08-05", "v": 2.5097}, {"d": "2024-08-07", "v": 2.4958}, {"d": "2024-08-09", "v": 2.5932}, {"d": "2024-08-13", "v": 2.7369}, {"d": "2024-08-15", "v": 2.7631}, {"d": "2024-08-19", "v": 2.8183}, {"d": "2024-08-21", "v": 2.8029}, {"d": "2024-08-23", "v": 2.8121}, {"d": "2024-08-27", "v": 2.7962}, {"d": "2024-08-29", "v": 2.7955}, {"d": "2024-09-03", "v": 2.7302}, {"d": "2024-09-05", "v": 2.6576}, {"d": "2024-09-09", "v": 2.6664}, {"d": "2024-09-11", "v": 2.6976}, {"d": "2024-09-13", "v": 2.7528}, {"d": "2024-09-17", "v": 2.7744}, {"d": "2024-09-19", "v": 2.8148}, {"d": "2024-09-23", "v": 2.8444}, {"d": "2024-09-25", "v": 2.8878}, {"d": "2024-09-27", "v": 2.8694}, {"d": "2026-06-01", "v": 2.8694}, {"d": "2026-06-03", "v": 2.8869}, {"d": "2026-06-05", "v": 2.8935}, {"d": "2026-06-09", "v": 2.8564}, {"d": "2026-06-11", "v": 2.7284}, {"d": "2026-06-15", "v": 2.853}, {"d": "2026-06-17", "v": 2.7723}, {"d": "2026-06-22", "v": 2.8266}, {"d": "2026-06-24", "v": 2.7293}, {"d": "2026-06-26", "v": 2.6681}, {"d": "2026-06-30", "v": 2.5992}, {"d": "2026-07-02", "v": 2.5548}, {"d": "2026-07-07", "v": 2.4596}, {"d": "2026-07-09", "v": 2.493}, {"d": "2026-07-13", "v": 2.4705}, {"d": "2026-07-15", "v": 2.5072}, {"d": "2026-07-17", "v": 2.5395}, {"d": "2026-07-21", "v": 2.5344}, {"d": "2026-07-23", "v": 2.4749}, {"d": "2026-07-27", "v": 2.5951}, {"d": "2026-07-29", "v": 2.565}, {"d": "2026-07-31", "v": 2.7205}, {"d": "2026-08-04", "v": 2.9442}, {"d": "2026-08-06", "v": 3.0325}, {"d": "2026-08-10", "v": 3.0362}, {"d": "2026-08-12", "v": 2.9648}, {"d": "2026-08-14", "v": 2.9816}, {"d": "2026-08-18", "v": 2.9727}, {"d": "2026-08-20", "v": 2.9002}, {"d": "2026-08-24", "v": 2.9443}, {"d": "2026-08-26", "v": 2.9748}, {"d": "2026-08-28", "v": 2.9769}, {"d": "2026-09-01", "v": 3.0017}], "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null}], "stats": {"sessions": 1, "live_sessions": 0, "trades": 1, "exp_pnl": -0.04, "act_pnl": null, "ref_mean_bps": 10.7, "ref_p5": -1.98}};
+const D = {"updated": "2026-09-03 04:22", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}], "monthly": [{"m": "2026-09", "exp": -0.04, "act": null, "days": 1, "traded": 1, "win": 0.0}], "stats": {"sessions": 1, "live_sessions": 0, "trades": 1, "exp_pnl": -0.04, "act_pnl": null, "avg_slip": null, "ref_mean_bps": 10.7}};
 function tog(){const r=document.documentElement;
  r.dataset.theme = r.dataset.theme==='dark'?'light':'dark';}
+function show(p){document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+ document.getElementById('p-'+p).classList.add('active');
+ document.querySelector(`.tab[data-p="${p}"]`).classList.add('active');}
 const tip=document.getElementById('tip');
 function showTip(e,h){tip.innerHTML=h;tip.style.opacity=1;
  tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}
 function hideTip(){tip.style.opacity=0;}
-
-// tiles
 const s=D.stats;
-const tiles=[["Expected P&L (phase)",(s.exp_pnl>=0?"+":"")+s.exp_pnl+"%",
-  s.act_pnl==null?"actual pending QC import":"actual "+(s.act_pnl>=0?"+":"")+s.act_pnl+"%"],
- ["Sessions journaled",s.sessions,"expected side, nightly"],
- ["Completed trades",s.trades+" / 150","gate minimum"],
+const tiles=[["Expected P&L",(s.exp_pnl>=0?"+":"")+s.exp_pnl+"%",
+  s.act_pnl==null?"actual pending fills":"actual "+(s.act_pnl>=0?"+":"")+s.act_pnl+"%"],
+ ["Sessions",s.sessions,s.live_sessions+" with actual fills"],
+ ["Trades",s.trades+" / 150","gate minimum"],
  ["Degradation test",s.live_sessions+" / 20","live sessions to arm"],
- ["Reference mean",(s.ref_mean_bps>=0?"+":"")+s.ref_mean_bps+" bps/day",
-  "worst-5% day "+s.ref_p5+"%"]];
+ ["Avg slippage",s.avg_slip==null?"—":s.avg_slip+" bps","round trip vs expected"]];
 document.getElementById('tiles').innerHTML=tiles.map(t=>
  `<div class="tile"><div class="k">${t[0]}</div><div class="v">${t[1]}</div>
   <div class="h">${t[2]}</div></div>`).join('');
 
-// reference equity line
-(function(){
- const el=document.getElementById('eq'),W=960,H=240,P=28;
- const xs=D.ref.map((_,i)=>i),vs=D.ref.map(p=>p.v);
- const lo=Math.min(...vs),hi=Math.max(...vs);
- const X=i=>P+(W-2*P)*i/(xs.length-1||1), Y=v=>H-P-(H-2*P)*(v-lo)/((hi-lo)||1);
- let g='';
- for(let k=0;k<=4;k++){const y=P+(H-2*P)*k/4,val=(hi-(hi-lo)*k/4);
-  g+=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${y}" y2="${y}"/>
-      <text class="axis" x="4" y="${y+3}">${val.toFixed(1)}x</text>`;}
- const path=vs.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+','+Y(v).toFixed(1)).join('');
- g+=`<path d="${path}" fill="none" stroke="var(--series-1)" stroke-width="2"
-      stroke-linejoin="round"/>`;
- [0,Math.floor(xs.length/2),xs.length-1].forEach(i=>{
-  g+=`<text class="axis" x="${X(i)}" y="${H-6}" text-anchor="middle">${D.ref[i].d}</text>`;});
- g+=`<rect id="eqhit" x="0" y="0" width="${W}" height="${H}" fill="transparent"/>
-     <line id="ch" y1="${P}" y2="${H-P}" stroke="var(--text-secondary)"
-      stroke-width="1" stroke-dasharray="3,3" opacity="0"/>
-     <circle id="cdot" r="4" fill="var(--series-1)" stroke="var(--surface-2)"
-      stroke-width="2" opacity="0"/>`;
- el.innerHTML=g;
- el.addEventListener('mousemove',e=>{
-  const r=el.getBoundingClientRect();
-  const fx=(e.clientX-r.left)/r.width*W;
-  const i=Math.max(0,Math.min(xs.length-1,Math.round((fx-P)/(W-2*P)*(xs.length-1))));
-  const ch=document.getElementById('ch'),cd=document.getElementById('cdot');
-  ch.setAttribute('x1',X(i));ch.setAttribute('x2',X(i));ch.setAttribute('opacity',1);
-  cd.setAttribute('cx',X(i));cd.setAttribute('cy',Y(vs[i]));cd.setAttribute('opacity',1);
-  showTip(e,`<b>${D.ref[i].d}</b><br>${vs[i].toFixed(2)}× ( ${((vs[i]-1)*100).toFixed(0)}% )`);});
- el.addEventListener('mouseleave',()=>{hideTip();
-  document.getElementById('ch').setAttribute('opacity',0);
-  document.getElementById('cdot').setAttribute('opacity',0);});
-})();
-
-// paper daily pnl bars (diverging around zero)
-(function(){
- const el=document.getElementById('pnl'),W=960,H=180,P=26;
- const J=D.journal;
- if(!J.length){el.outerHTML='<div class="sub">No sessions yet.</div>';return;}
- const vals=J.flatMap(j=>[j.exp??0,j.act??0]);
+function divergingBars(elId, rows, getE, getA, getLbl, h){
+ const el=document.getElementById(elId),W=960,H=h,P=24;
+ if(!rows.length){el.outerHTML='<div class="sub">No data yet.</div>';return;}
+ const vals=rows.flatMap(r=>[getE(r)??0,getA(r)??0]);
  const m=Math.max(0.3,...vals.map(Math.abs));
  const Y=v=>H/2-(H/2-P)*v/m;
- const bw=Math.max(4,Math.min(26,(W-2*P)/J.length-2));
+ const bw=Math.max(5,Math.min(30,(W-2*P)/rows.length-3));
  let g=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${H/2}" y2="${H/2}"/>
-        <text class="axis" x="4" y="${Y(m)+3}">+${m.toFixed(1)}%</text>
-        <text class="axis" x="4" y="${Y(-m)+3}">-${m.toFixed(1)}%</text>`;
- J.forEach((j,i)=>{
-  const x=P+i*((W-2*P)/J.length);
-  const draw=(v,off,cls)=>{if(v==null)return'';
-   const y0=Y(Math.max(0,v)),h=Math.abs(Y(v)-Y(0));
-   return `<rect x="${x+off}" y="${y0}" width="${bw/2-1}" height="${Math.max(h,1)}"
-     rx="2" fill="${v>=0?'var(--pos)':'var(--neg)'}" ${cls?'opacity="0.55"':''}
-     data-i="${i}"/>`;};
-  g+=draw(j.exp,0,false)+draw(j.act,bw/2,true);});
+   <text class="axis" x="4" y="${Y(m)+3}">+${m.toFixed(1)}%</text>
+   <text class="axis" x="4" y="${Y(-m)+3}">-${m.toFixed(1)}%</text>`;
+ rows.forEach((r,i)=>{
+  const x=P+i*((W-2*P)/rows.length);
+  [[getE(r),0,1],[getA(r),bw/2,0.55]].forEach(([v,off,op])=>{
+   if(v==null)return;
+   const y0=Y(Math.max(0,v)),hh=Math.abs(Y(v)-Y(0));
+   g+=`<rect x="${x+off}" y="${y0}" width="${bw/2-1}" height="${Math.max(hh,1)}" rx="2"
+     fill="${v>=0?'var(--pos)':'var(--neg)'}" opacity="${op}" data-i="${i}"/>`;});});
  el.innerHTML=g;
  el.addEventListener('mousemove',e=>{
   const t=e.target.closest('rect[data-i]');if(!t){hideTip();return;}
-  const j=J[+t.dataset.i];
-  showTip(e,`<b>${j.date}</b> ${j.picks}<br>expected ${j.exp==null?'—':j.exp+'%'}
-   · actual ${j.act==null?'—':j.act+'%'}`);});
+  const r=rows[+t.dataset.i];
+  showTip(e,`<b>${getLbl(r)}</b><br>expected ${getE(r)==null?'—':getE(r)+'%'}
+   · actual ${getA(r)==null?'—':getA(r)+'%'}`);});
+ el.addEventListener('mouseleave',hideTip);
+}
+divergingBars('pnl', D.journal, r=>r.exp, r=>r.act, r=>r.date+' '+r.picks, 170);
+divergingBars('mbars', D.monthly, r=>r.exp, r=>r.act, r=>r.m, 200);
+
+(function(){ // paper equity curves
+ const el=document.getElementById('eq'),W=960,H=190,P=24;
+ const J=D.journal;
+ if(!J.length){el.outerHTML='<div class="sub">No sessions yet.</div>';return;}
+ let e=1, a=1;
+ const eq=J.map(j=>{e*=1+(j.exp??0)/100; a*=1+((j.act==null?j.exp:j.act)??0)/100;
+  return {d:j.date, e, a, hasA:j.act!=null};});
+ const vs=eq.flatMap(p=>[p.e,p.a]);
+ const lo=Math.min(...vs),hi=Math.max(...vs);
+ const X=i=>P+(W-2*P)*i/((eq.length-1)||1), Y=v=>H-P-(H-2*P)*(v-lo)/((hi-lo)||1);
+ let g='';
+ for(let k=0;k<=3;k++){const y=P+(H-2*P)*k/3;
+  g+=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${y}" y2="${y}"/>
+   <text class="axis" x="4" y="${y+3}">$${(100*(hi-(hi-lo)*k/3)).toFixed(1)}k</text>`;}
+ const path=(get)=>eq.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+','+Y(get(p)).toFixed(1)).join('');
+ g+=`<path d="${path(p=>p.e)}" fill="none" stroke="var(--series-1)" stroke-width="2"/>`;
+ g+=`<path d="${path(p=>p.a)}" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="5,3"/>`;
+ el.innerHTML=g;
+ el.addEventListener('mousemove',e2=>{
+  const r=el.getBoundingClientRect();
+  const i=Math.max(0,Math.min(eq.length-1,Math.round((e2.clientX-r.left)/r.width*(eq.length-1))));
+  showTip(e2,`<b>${eq[i].d}</b><br>expected $${(100*eq[i].e).toFixed(2)}k · actual $${(100*eq[i].a).toFixed(2)}k${eq[i].hasA?'':' (proxy)'}`);});
  el.addEventListener('mouseleave',hideTip);
 })();
 
-// gates
-const gates=[["Completed trades",s.trades,150],["Live sessions (degradation arm)",s.live_sessions,20],
- ["Phase duration (sessions of ~126)",s.sessions,126]];
+const gates=[["Completed trades",s.trades,150],
+ ["Live sessions (degradation arm)",s.live_sessions,20],
+ ["Phase duration (~126 sessions)",s.sessions,126]];
 document.getElementById('gates').innerHTML=gates.map(g=>{
  const pct=Math.min(100,100*g[1]/g[2]);
- return `<div style="margin-bottom:10px"><div style="display:flex;
-  justify-content:space-between;font-size:12px"><span>${g[0]}</span>
-  <span style="color:var(--text-secondary)">${g[1]} / ${g[2]}</span></div>
+ return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px">
+  <span>${g[0]}</span><span style="color:var(--text-secondary)">${g[1]} / ${g[2]}</span></div>
   <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;}).join('');
 
-// journal table
 document.getElementById('jb').innerHTML=D.journal.slice().reverse().map(j=>
  `<tr><td>${j.date}</td><td>${j.picks}</td>
   <td class="num ${j.exp>=0?'pos':'neg'}">${j.exp==null?'—':(j.exp>=0?'+':'')+j.exp+'%'}</td>
-  <td class="num ${j.act>=0?'pos':'neg'}">${j.act==null?'—':(j.act>=0?'+':'')+j.act+'%'}</td></tr>`).join('');
+  <td class="num ${j.act>=0?'pos':'neg'}">${j.act==null?'—':(j.act>=0?'+':'')+j.act+'%'}</td>
+  <td class="num">${j.slip==null?'—':j.slip}</td></tr>`).join('');
+document.getElementById('mb').innerHTML=D.monthly.slice().reverse().map(m=>
+ `<tr><td>${m.m}</td>
+  <td class="num ${m.exp>=0?'pos':'neg'}">${(m.exp>=0?'+':'')+m.exp}%</td>
+  <td class="num ${m.act>=0?'pos':'neg'}">${m.act==null?'—':(m.act>=0?'+':'')+m.act+'%'}</td>
+  <td class="num">${m.days}</td><td class="num">${m.traded}</td>
+  <td class="num">${m.win==null?'—':m.win+'%'}</td></tr>`).join('');
 </script></body></html>
