@@ -57,7 +57,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 <body class="viz-root">
 <button class="toggle" onclick="tog()">◐</button>
 <h1>📊 Top S&amp;P Stocks Best Strategy — Paper Phase</h1>
-<div class="sub">frozen 2026-09-02 · causal · Alpaca paper live · updated 2026-09-03 07:32</div>
+<div class="sub">frozen 2026-09-02 · causal · Alpaca paper live · updated 2026-09-04 07:32</div>
 <div class="tabs">
  <div class="tab active" data-p="daily" onclick="show('daily')">Daily</div>
  <div class="tab" data-p="monthly" onclick="show('monthly')">Monthly</div>
@@ -111,7 +111,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 
 <div class="tip" id="tip"></div>
 <script>
-const D = {"updated": "2026-09-03 07:32", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": null, "days": 2, "traded": 2, "win": 50.0}], "stats": {"sessions": 2, "live_sessions": 0, "trades": 5, "exp_pnl": 0.87, "act_pnl": null, "avg_slip": null, "ref_mean_bps": 10.7}};
+const D = {"updated": "2026-09-04 07:32", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": null, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": null, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 0, "trades": 5, "exp_pnl": 0.87, "act_pnl": null, "avg_slip": null, "ref_mean_bps": 10.7}};
 function tog(){const r=document.documentElement;
  r.dataset.theme = r.dataset.theme==='dark'?'light':'dark';}
 function show(p){document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
