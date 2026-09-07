@@ -97,7 +97,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:550}
  <h1>Top S&amp;P Stocks — Overnight Gap Rank-Hold</h1>
  <span class="live"><span class="dot"></span>PAPER LIVE</span>
 </div>
-<div class="sub">frozen 2026-09-02 · causal · Alpaca paper account · auto-updated 2026-09-07 05:00</div>
+<div class="sub">frozen 2026-09-02 · causal · Alpaca paper account · auto-updated 2026-09-07 05:01</div>
 <div class="tabs">
  <div class="tab active" data-p="daily" onclick="show('daily')">Daily</div>
  <div class="tab" data-p="monthly" onclick="show('monthly')">Monthly</div>
@@ -154,7 +154,7 @@ actual = real paper fills · a red day or month is expected behavior; the verdic
 6-month gate, not any single stretch.</div>
 <div class="tip" id="tip"></div>
 <script>
-const D = {"updated": "2026-09-07 05:00", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": -0.138, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": -0.14, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 1, "trades": 5, "exp_pnl": 0.87, "act_pnl": -0.14, "avg_slip": null, "ref_mean_bps": 10.7}};
+const D = {"updated": "2026-09-07 05:01", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": -0.138, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": -0.14, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 1, "trades": 5, "exp_pnl": 0.87, "act_pnl": -0.14, "avg_slip": null, "ref_mean_bps": 10.7}};
 function tog(){const r=document.documentElement;
  r.dataset.theme = r.dataset.theme==='dark'?'light':'dark';}
 function show(p){document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
@@ -219,14 +219,36 @@ divergingBars('mbars', D.monthly, r=>r.exp, r=>r.act, r=>r.m, 200);
   g+=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${y}" y2="${y}"/>
    <text class="axis" x="4" y="${y+3}">$${(100*(hi-(hi-lo)*k/3)).toFixed(1)}k</text>`;}
  const path=(get)=>eq.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+','+Y(get(p)).toFixed(1)).join('');
- g+=`<path d="${path(p=>p.e)}" fill="none" stroke="var(--series-1)" stroke-width="2"/>`;
- g+=`<path d="${path(p=>p.a)}" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="5,3"/>`;
+ // soft gradient fill under the expected curve
+ g+=`<defs><linearGradient id="eqg" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0%" stop-color="var(--series-1)" stop-opacity="0.18"/>
+   <stop offset="100%" stop-color="var(--series-1)" stop-opacity="0"/></linearGradient></defs>`;
+ g+=`<path d="${path(p=>p.e)} L ${X(eq.length-1)},${H-P} L ${X(0)},${H-P} Z" fill="url(#eqg)"/>`;
+ g+=`<path d="${path(p=>p.e)}" fill="none" stroke="var(--series-1)" stroke-width="2.5" stroke-linejoin="round"/>`;
+ g+=`<path d="${path(p=>p.a)}" fill="none" stroke="var(--series-2)" stroke-width="2.5" stroke-dasharray="5,3" stroke-linejoin="round"/>`;
+ // crosshair + tracker dots + full-surface hit area
+ g+=`<line id="eqch" y1="${P}" y2="${H-P}" stroke="var(--text-secondary)"
+   stroke-width="1" stroke-dasharray="3,3" opacity="0"/>
+  <circle id="eqd1" r="4.5" fill="var(--series-1)" stroke="var(--surface-2)" stroke-width="2" opacity="0"/>
+  <circle id="eqd2" r="4.5" fill="var(--series-2)" stroke="var(--surface-2)" stroke-width="2" opacity="0"/>
+  <rect x="0" y="0" width="${W}" height="${H}" fill="transparent"/>`;
  el.innerHTML=g;
+ el.style.cursor='crosshair';
  el.addEventListener('mousemove',e2=>{
   const r=el.getBoundingClientRect();
-  const i=Math.max(0,Math.min(eq.length-1,Math.round((e2.clientX-r.left)/r.width*(eq.length-1))));
-  showTip(e2,`<b>${eq[i].d}</b><br>expected $${(100*eq[i].e).toFixed(2)}k · actual $${(100*eq[i].a).toFixed(2)}k${eq[i].hasA?'':' (proxy)'}`);});
- el.addEventListener('mouseleave',hideTip);
+  const fx=(e2.clientX-r.left)/r.width*W;
+  const i=Math.max(0,Math.min(eq.length-1,Math.round((fx-P)/(W-2*P)*(eq.length-1))));
+  const ch=document.getElementById('eqch');
+  ch.setAttribute('x1',X(i));ch.setAttribute('x2',X(i));ch.setAttribute('opacity',0.7);
+  const d1=document.getElementById('eqd1'),d2=document.getElementById('eqd2');
+  d1.setAttribute('cx',X(i));d1.setAttribute('cy',Y(eq[i].e));d1.setAttribute('opacity',1);
+  d2.setAttribute('cx',X(i));d2.setAttribute('cy',Y(eq[i].a));d2.setAttribute('opacity',1);
+  const dayRet=i>0?(100*(eq[i].e/eq[i-1].e-1)).toFixed(2):'0.00';
+  showTip(e2,`<b>${eq[i].d}</b><br>` +
+   `<span style="color:#7fb3f0">●</span> expected <b>$${(100*eq[i].e).toFixed(2)}k</b> (${dayRet>=0?'+':''}${dayRet}% day)<br>` +
+   `<span style="color:#f0a37f">●</span> actual <b>$${(100*eq[i].a).toFixed(2)}k</b>${eq[i].hasA?'':' <i>(proxy)</i>'}`);});
+ el.addEventListener('mouseleave',()=>{hideTip();
+  ['eqch','eqd1','eqd2'].forEach(id=>document.getElementById(id).setAttribute('opacity',0));});
 })();
 
 const gates=[["Completed trades",s.trades,150],
