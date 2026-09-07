@@ -1,7 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Quant Portfolio — Strategy Dashboard</title>
-<style>
+<title>Weekly Regime Options</title><style>
 .viz-root{color-scheme:light;
  --surface-1:#fcfcfb;--surface-2:#ffffff;--surface-3:#f0efec;--text-primary:#0b0b0b;
  --text-secondary:#52514e;--grid:#e7e6e2;--series-1:#2a78d6;--series-2:#eb6834;
@@ -89,53 +88,41 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:550}
 .foot{color:var(--text-secondary);font-size:11.5px;margin-top:22px;
  padding-top:14px;border-top:1px solid var(--grid)}
 
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
-.scard{background:var(--surface-2);border:1px solid var(--grid);border-radius:18px;
- padding:22px;box-shadow:var(--shadow);transition:transform .15s, box-shadow .15s;
- display:block;text-decoration:none;color:var(--text-primary)}
-.scard:hover{transform:translateY(-3px)}
-.scard h3{margin:0 0 4px;font-size:17px;letter-spacing:-.01em}
-.scard .desc{color:var(--text-secondary);font-size:12.5px;margin-bottom:14px}
-.kv{display:flex;gap:26px;flex-wrap:wrap}
-.kv div b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
-.kv div span{font-size:10.5px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.06em}
-.badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:650;
- border-radius:99px;padding:4px 11px;margin-bottom:12px}
-.b-live{background:rgba(12,163,12,.1);color:var(--good)}
-.b-dev{background:rgba(42,120,214,.1);color:var(--series-1)}
-.ghost{border-style:dashed;display:flex;align-items:center;justify-content:center;
- color:var(--text-secondary);font-size:13px;min-height:150px}
-</style></head><body class="viz-root">
+.nav{margin-bottom:14px;font-size:13px}.nav a{color:var(--text-secondary);text-decoration:none}
+pre{background:var(--surface-3);border-radius:12px;padding:16px;font-size:12.5px;
+ overflow-x:auto;line-height:1.5}</style></head><body class="viz-root">
 <button class="toggle" onclick="tog()">◐</button>
-<div class="hero"><h1>Quant Portfolio</h1>
-<span class="live"><span class="dot"></span>AUTO-UPDATED DAILY</span></div>
-<div class="sub">systematic strategies · honest evaluation · updated 2026-09-07 05:00</div>
-<div class="grid2">
-<a class="scard" href="sp-overnight.html">
- <div class="badge b-live"><span class="dot"></span>PAPER LIVE</div>
- <h3>Top S&amp;P Stocks — Overnight Gap Rank-Hold</h3>
- <div class="desc">Rank S&amp;P-100 on gap + volume + earnings · buy ≤4 at 10:00 above VWAP ·
- sell next 09:35 · no stops · causal &amp; externally replicated</div>
- <div class="kv">
-  <div><b>+0.87%</b><span>expected P&amp;L</span></div>
-  <div><b>-0.14%</b><span>actual P&amp;L</span></div>
-  <div><b>3</b><span>sessions</span></div>
-  <div><b>5/150</b><span>gate trades</span></div>
- </div></a>
-<a class="scard" href="weekly-options.html">
- <div class="badge b-dev">FORWARD VALIDATION</div>
- <h3>Weekly Regime Options</h3>
- <div class="desc">Trend + breadth + credit + VIX term-structure composite (25y, Sharpe 0.64 vs 0.52,
- half the drawdown) · defined-risk spreads · decided weekly, together</div>
- <div class="kv">
-  <div><b>+4</b><span>composite</span></div>
-  <div><b>2001-25</b><span>signal backtest</span></div>
-  <div><b>0</b><span>structures open</span></div>
-  <div><b>≤2%</b><span>risk/structure</span></div>
- </div></a>
-<div class="scard ghost">+ future strategies plug in here — same pipeline, same honesty</div>
-</div>
-<div class="foot">Every strategy passes: fold discipline · trial registry &amp; deflated Sharpe ·
-causality audits · external replication · paper before capital. Rejected ideas stay documented.</div>
+<div class="nav"><a href="index.html">← All strategies</a></div>
+<div class="hero"><h1>Weekly Regime Options</h1>
+<span class="live">FORWARD VALIDATION</span></div>
+<div class="sub">slow signals → defined-risk spreads · traded weekly, human-in-the-loop</div>
+<div class="card rules"><h2>How it works</h2>
+<p>A composite of <b>trend, 12-week momentum, breadth (RSP/SPY), credit (HYG/TLT)</b> plus the
+<b>VIX term-structure stress rule</b> sets the weekly posture. The playbook maps posture + IV to
+defined-risk option structures (debit spreads, credit spreads, iron condors) on liquid ETFs.
+Signals validated on 25 years of weekly data — positive in all five folds incl. 2008 &amp; 2020,
+Sharpe 0.64 vs 0.52 buy-and-hold at half the drawdown. The options layer validates forward,
+in the paper account, one reviewed decision per week. 2026 sealed as holdout.</p></div>
+<div class="card rules"><h2>Signal backtest (2001–2025, weekly)</h2>
+<table><thead><tr><th>fold</th><th style="text-align:right">strategy</th>
+<th style="text-align:right">buy&amp;hold</th><th style="text-align:right">maxDD vs B&amp;H</th></tr></thead>
+<tbody>
+<tr><td>2001–06</td><td class="num">+18.0%</td><td class="num">+19.9%</td><td class="num">−17% vs −39%</td></tr>
+<tr><td>2007–12 (GFC)</td><td class="num">+16.7%</td><td class="num">+16.6%</td><td class="num">−20% vs −55%</td></tr>
+<tr><td>2013–18</td><td class="num">+63.9%</td><td class="num">+98.4%</td><td class="num">−11% vs −17%</td></tr>
+<tr><td>2019–23</td><td class="num">+67.4%</td><td class="num">+99.7%</td><td class="num">−17% vs −32%</td></tr>
+<tr><td>2024–25</td><td class="num">+41.2%</td><td class="num">+49.2%</td><td class="num">−7% vs −17%</td></tr>
+</tbody></table></div>
+<div class="card"><h2>Latest weekly brief</h2><pre>WEEKLY OPTIONS BRIEF — 2026-09-07
+trend +1 | mom12 +1 | breadth -1 | credit +1 -> COMPOSITE +2
+VIX 14.5 | VIX/VIX3M 0.707 (normal)
+
+PLAYBOOK -> BULL: call DEBIT spread (low IV): long ~0.55d / short ~0.30d, 3-5wk, SPY or QQQ
+risk cap: <=2% of account per structure, max 2 open, defined-risk only
+
+live SPY chain reachable: True (contracts on request)
+
+Next step: review together -> pick strikes from live chain -> place in PAPER options account (level 3 approved).</pre></div>
+<div class="foot">Defined-risk only · ≤2% per structure · max 2 open · stress rule overrides all.</div>
 <script>function tog(){const r=document.documentElement;
 r.dataset.theme=r.dataset.theme==='dark'?'light':'dark';}</script></body></html>

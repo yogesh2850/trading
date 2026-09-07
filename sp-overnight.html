@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trading Portal — Top S&P Stocks Best Strategy</title>
+<style>
+.viz-root{color-scheme:light;
+ --surface-1:#fcfcfb;--surface-2:#ffffff;--surface-3:#f0efec;--text-primary:#0b0b0b;
+ --text-secondary:#52514e;--grid:#e7e6e2;--series-1:#2a78d6;--series-2:#eb6834;
+ --pos:#2a78d6;--neg:#d03b3b;--good:#0ca30c;--accent:linear-gradient(135deg,#2a78d6,#4a3aa7);
+ --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(20,30,50,.06);
+ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+ background:
+   radial-gradient(1100px 500px at 85% -10%, rgba(42,120,214,.07), transparent 60%),
+   radial-gradient(900px 400px at -10% 110%, rgba(74,58,167,.05), transparent 60%),
+   var(--surface-1);
+ color:var(--text-primary);margin:0;padding:26px clamp(14px,4vw,48px);min-height:100vh}
+@media (prefers-color-scheme: dark){:root:where(:not([data-theme="light"])) .viz-root{
+ color-scheme:dark;--surface-1:#161615;--surface-2:#1f1f1e;--surface-3:#292927;
+ --text-primary:#fff;--text-secondary:#c3c2b7;--grid:#34342f;--series-1:#3987e5;
+ --series-2:#d95926;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35)}}
+:root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#161615;
+ --surface-2:#1f1f1e;--surface-3:#292927;--text-primary:#fff;--text-secondary:#c3c2b7;
+ --grid:#34342f;--series-1:#3987e5;--series-2:#d95926;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35)}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;
+ gap:10px;margin-bottom:6px}
+h1{font-size:clamp(20px,3vw,27px);margin:0;letter-spacing:-.02em;
+ background:var(--accent);-webkit-background-clip:text;background-clip:text;
+ -webkit-text-fill-color:transparent}
+.live{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);
+ border:1px solid var(--grid);border-radius:99px;padding:5px 13px;font-size:12px;
+ font-weight:600;box-shadow:var(--shadow)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);
+ animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(12,163,12,.5)}70%{box-shadow:0 0 0 7px rgba(12,163,12,0)}100%{box-shadow:0 0 0 0 rgba(12,163,12,0)}}
+.sub{color:var(--text-secondary);font-size:12.5px;margin:4px 0 18px}
+.nav{margin-bottom:14px;font-size:13px}
+.nav a{color:var(--text-secondary);text-decoration:none;font-weight:550}
+.nav a:hover{color:var(--text-primary)}
+.tabs{display:inline-flex;background:var(--surface-3);border-radius:12px;padding:4px;
+ gap:2px;margin-bottom:20px;box-shadow:inset 0 1px 2px rgba(0,0,0,.04)}
+.tab{cursor:pointer;padding:8px 22px;border-radius:9px;font-size:13.5px;font-weight:550;
+ color:var(--text-secondary);transition:all .15s;border:none;background:transparent}
+.tab.active{background:var(--surface-2);color:var(--text-primary);box-shadow:var(--shadow)}
+.pane{display:none;animation:fade .25s ease}
+.pane.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;
+ margin-bottom:20px}
+.tile{background:var(--surface-2);border:1px solid var(--grid);border-radius:14px;
+ padding:14px 16px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+ background:var(--accent)}
+.tile .k{font-size:10.5px;color:var(--text-secondary);text-transform:uppercase;
+ letter-spacing:.07em;font-weight:600}
+.tile .v{font-size:26px;font-weight:700;margin-top:4px;letter-spacing:-.02em;
+ font-variant-numeric:tabular-nums}
+.tile .h{font-size:11.5px;color:var(--text-secondary);margin-top:3px}
+.card{background:var(--surface-2);border:1px solid var(--grid);border-radius:16px;
+ padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:11.5px;margin:0 0 12px;color:var(--text-secondary);
+ text-transform:uppercase;letter-spacing:.08em;font-weight:650}
+svg{display:block;width:100%}
+.gridline{stroke:var(--grid);stroke-width:1}
+.axis{fill:var(--text-secondary);font-size:10px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{color:var(--text-secondary);text-align:left;font-weight:600;font-size:10.5px;
+ text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;
+ border-bottom:1px solid var(--grid)}
+td{padding:8px 10px;border-bottom:1px solid var(--grid)}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--surface-3)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:550}
+.bar-track{background:var(--surface-3);border-radius:6px;height:9px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:6px;background:var(--accent);
+ transition:width .6s ease}
+.tip{position:fixed;pointer-events:none;background:var(--text-primary);
+ color:var(--surface-1);padding:7px 11px;border-radius:8px;font-size:12px;
+ opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap;box-shadow:var(--shadow)}
+.toggle{position:absolute;top:24px;right:clamp(14px,4vw,48px);background:var(--surface-2);
+ border:1px solid var(--grid);color:var(--text-primary);border-radius:10px;
+ padding:6px 13px;cursor:pointer;font-size:13px;box-shadow:var(--shadow)}
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--text-secondary);margin-bottom:8px}
+.legend span::before{content:"";display:inline-block;width:11px;height:11px;
+ border-radius:3.5px;margin-right:6px;vertical-align:-1.5px}
+.legend .l1::before{background:var(--series-1)}.legend .l2::before{background:var(--series-2)}
+.pos{color:var(--good)}.neg{color:var(--neg)}
+.rules{font-size:13.5px;line-height:1.65}
+.rules b{letter-spacing:-.01em}
+.foot{color:var(--text-secondary);font-size:11.5px;margin-top:22px;
+ padding-top:14px;border-top:1px solid var(--grid)}
+</style></head>
+<body class="viz-root">
+<button class="toggle" onclick="tog()">◐</button>
+<div class="nav"><a href="index.html">← All strategies</a></div>
+<div class="hero">
+ <h1>Top S&amp;P Stocks — Overnight Gap Rank-Hold</h1>
+ <span class="live"><span class="dot"></span>PAPER LIVE</span>
+</div>
+<div class="sub">frozen 2026-09-02 · causal · Alpaca paper account · auto-updated 2026-09-07 05:00</div>
+<div class="tabs">
+ <div class="tab active" data-p="daily" onclick="show('daily')">Daily</div>
+ <div class="tab" data-p="monthly" onclick="show('monthly')">Monthly</div>
+ <div class="tab" data-p="strategy" onclick="show('strategy')">Strategy</div>
+</div>
+
+<div class="pane active" id="p-daily">
+ <div class="row" id="tiles"></div>
+ <div class="card"><h2>Daily P&amp;L — expected (model) vs actual (fills)</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="pnl" height="170" viewBox="0 0 960 170"></svg></div>
+ <div class="card"><h2>Paper equity — growth of $100k</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="eq" height="190" viewBox="0 0 960 190" preserveAspectRatio="none"></svg></div>
+ <div class="card"><h2>Gate progress</h2><div id="gates"></div></div>
+ <div class="card"><h2>Journal (newest first)</h2>
+  <table><thead><tr><th>date</th><th>picks</th><th style="text-align:right">expected</th>
+  <th style="text-align:right">actual</th><th style="text-align:right">slip (bps)</th></tr>
+  </thead><tbody id="jb"></tbody></table></div>
+</div>
+
+<div class="pane" id="p-monthly">
+ <div class="card"><h2>Monthly P&amp;L</h2>
+  <div class="legend"><span class="l1">expected</span><span class="l2">actual</span></div>
+  <svg id="mbars" height="200" viewBox="0 0 960 200"></svg></div>
+ <div class="card"><h2>Monthly detail</h2>
+  <table><thead><tr><th>month</th><th style="text-align:right">expected</th>
+  <th style="text-align:right">actual</th><th style="text-align:right">days</th>
+  <th style="text-align:right">traded</th><th style="text-align:right">win-day %</th></tr>
+  </thead><tbody id="mb"></tbody></table></div>
+</div>
+
+<div class="pane" id="p-strategy">
+ <div class="card rules"><h2>The frozen strategy</h2>
+  <p><b>score = 0.883·z(|open gap|) + 0.087·z(prev-day volume) + 0.030·z(earnings recency)</b><br>
+  Top-5 pool → score ≥ 0.97 → buy ≤4 at <b>10:00 ET</b> only if above session VWAP
+  (causal: 09:59 vs VWAP-to-10:00) → equal weight, 20% cap → hold overnight →
+  sell <b>next day 09:35 ET</b>. No stops · no regime gate · no switching · cash days allowed.</p></div>
+ <div class="card rules"><h2>Corrected evidence (post lookahead audit 2026-09-03)</h2>
+  <p>2024–26 causal: <b>+37.9%/18mo</b> — matches QuantConnect's independent +36.4% ✓<br>
+  2020–24 causal: +1.8%/fold — deep-history robustness <b>not</b> demonstrated<br>
+  Holdout Jun–Aug 26 causal: +0.8% vs SPY +0.8% — no edge shown that quarter<br>
+  <b>Verdict: real, externally replicated recent-era edge; this paper phase is the primary evidence.</b></p></div>
+ <div class="card rules"><h2>Tested and rejected (~3,700 registered trials)</h2>
+  <p>Stops (kill 45–66% of winners) · intraday exits/switching · weak-close cuts
+  (losers bounce overnight) · earnings avoidance · news exits (bad news → better
+  overnights) · losing-streak pauses (streaks predict <i>better</i> days) ·
+  fades (3 forms) · Fib pullbacks · hourly cadence · meta-labeling ·
+  vol-scaling · sector caps. <b>The edge is the unadorned rank-and-hold.</b></p></div>
+</div>
+
+<div class="foot">Automated end-of-day publishing · expected = frozen model on Alpaca data,
+actual = real paper fills · a red day or month is expected behavior; the verdict comes from the
+6-month gate, not any single stretch.</div>
+<div class="tip" id="tip"></div>
+<script>
+const D = {"updated": "2026-09-07 05:00", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": -0.138, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": -0.14, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 1, "trades": 5, "exp_pnl": 0.87, "act_pnl": -0.14, "avg_slip": null, "ref_mean_bps": 10.7}};
+function tog(){const r=document.documentElement;
+ r.dataset.theme = r.dataset.theme==='dark'?'light':'dark';}
+function show(p){document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+ document.getElementById('p-'+p).classList.add('active');
+ document.querySelector(`.tab[data-p="${p}"]`).classList.add('active');}
+const tip=document.getElementById('tip');
+function showTip(e,h){tip.innerHTML=h;tip.style.opacity=1;
+ tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-10)+'px';}
+function hideTip(){tip.style.opacity=0;}
+const s=D.stats;
+const tiles=[["Expected P&L",(s.exp_pnl>=0?"+":"")+s.exp_pnl+"%",
+  s.act_pnl==null?"actual pending fills":"actual "+(s.act_pnl>=0?"+":"")+s.act_pnl+"%"],
+ ["Sessions",s.sessions,s.live_sessions+" with actual fills"],
+ ["Trades",s.trades+" / 150","gate minimum"],
+ ["Degradation test",s.live_sessions+" / 20","live sessions to arm"],
+ ["Avg slippage",s.avg_slip==null?"—":s.avg_slip+" bps","round trip vs expected"]];
+document.getElementById('tiles').innerHTML=tiles.map(t=>
+ `<div class="tile"><div class="k">${t[0]}</div><div class="v">${t[1]}</div>
+  <div class="h">${t[2]}</div></div>`).join('');
+
+function divergingBars(elId, rows, getE, getA, getLbl, h){
+ const el=document.getElementById(elId),W=960,H=h,P=24;
+ if(!rows.length){el.outerHTML='<div class="sub">No data yet.</div>';return;}
+ const vals=rows.flatMap(r=>[getE(r)??0,getA(r)??0]);
+ const m=Math.max(0.3,...vals.map(Math.abs));
+ const Y=v=>H/2-(H/2-P)*v/m;
+ const bw=Math.max(5,Math.min(30,(W-2*P)/rows.length-3));
+ let g=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${H/2}" y2="${H/2}"/>
+   <text class="axis" x="4" y="${Y(m)+3}">+${m.toFixed(1)}%</text>
+   <text class="axis" x="4" y="${Y(-m)+3}">-${m.toFixed(1)}%</text>`;
+ rows.forEach((r,i)=>{
+  const x=P+i*((W-2*P)/rows.length);
+  [[getE(r),0,1],[getA(r),bw/2,0.55]].forEach(([v,off,op])=>{
+   if(v==null)return;
+   const y0=Y(Math.max(0,v)),hh=Math.abs(Y(v)-Y(0));
+   g+=`<rect x="${x+off}" y="${y0}" width="${bw/2-1}" height="${Math.max(hh,1)}" rx="2"
+     fill="${v>=0?'var(--pos)':'var(--neg)'}" opacity="${op}" data-i="${i}"/>`;});});
+ el.innerHTML=g;
+ el.addEventListener('mousemove',e=>{
+  const t=e.target.closest('rect[data-i]');if(!t){hideTip();return;}
+  const r=rows[+t.dataset.i];
+  showTip(e,`<b>${getLbl(r)}</b><br>expected ${getE(r)==null?'—':getE(r)+'%'}
+   · actual ${getA(r)==null?'—':getA(r)+'%'}`);});
+ el.addEventListener('mouseleave',hideTip);
+}
+divergingBars('pnl', D.journal, r=>r.exp, r=>r.act, r=>r.date+' '+r.picks, 170);
+divergingBars('mbars', D.monthly, r=>r.exp, r=>r.act, r=>r.m, 200);
+
+(function(){ // paper equity curves
+ const el=document.getElementById('eq'),W=960,H=190,P=24;
+ const J=D.journal;
+ if(!J.length){el.outerHTML='<div class="sub">No sessions yet.</div>';return;}
+ let e=1, a=1;
+ const eq=J.map(j=>{e*=1+(j.exp??0)/100; a*=1+((j.act==null?j.exp:j.act)??0)/100;
+  return {d:j.date, e, a, hasA:j.act!=null};});
+ const vs=eq.flatMap(p=>[p.e,p.a]);
+ const lo=Math.min(...vs),hi=Math.max(...vs);
+ const X=i=>P+(W-2*P)*i/((eq.length-1)||1), Y=v=>H-P-(H-2*P)*(v-lo)/((hi-lo)||1);
+ let g='';
+ for(let k=0;k<=3;k++){const y=P+(H-2*P)*k/3;
+  g+=`<line class="gridline" x1="${P}" x2="${W-P}" y1="${y}" y2="${y}"/>
+   <text class="axis" x="4" y="${y+3}">$${(100*(hi-(hi-lo)*k/3)).toFixed(1)}k</text>`;}
+ const path=(get)=>eq.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+','+Y(get(p)).toFixed(1)).join('');
+ g+=`<path d="${path(p=>p.e)}" fill="none" stroke="var(--series-1)" stroke-width="2"/>`;
+ g+=`<path d="${path(p=>p.a)}" fill="none" stroke="var(--series-2)" stroke-width="2" stroke-dasharray="5,3"/>`;
+ el.innerHTML=g;
+ el.addEventListener('mousemove',e2=>{
+  const r=el.getBoundingClientRect();
+  const i=Math.max(0,Math.min(eq.length-1,Math.round((e2.clientX-r.left)/r.width*(eq.length-1))));
+  showTip(e2,`<b>${eq[i].d}</b><br>expected $${(100*eq[i].e).toFixed(2)}k · actual $${(100*eq[i].a).toFixed(2)}k${eq[i].hasA?'':' (proxy)'}`);});
+ el.addEventListener('mouseleave',hideTip);
+})();
+
+const gates=[["Completed trades",s.trades,150],
+ ["Live sessions (degradation arm)",s.live_sessions,20],
+ ["Phase duration (~126 sessions)",s.sessions,126]];
+document.getElementById('gates').innerHTML=gates.map(g=>{
+ const pct=Math.min(100,100*g[1]/g[2]);
+ return `<div style="margin-bottom:9px"><div style="display:flex;justify-content:space-between;font-size:12px">
+  <span>${g[0]}</span><span style="color:var(--text-secondary)">${g[1]} / ${g[2]}</span></div>
+  <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div></div>`;}).join('');
+
+document.getElementById('jb').innerHTML=D.journal.slice().reverse().map(j=>
+ `<tr><td>${j.date}</td><td>${j.picks}</td>
+  <td class="num ${j.exp>=0?'pos':'neg'}">${j.exp==null?'—':(j.exp>=0?'+':'')+j.exp+'%'}</td>
+  <td class="num ${j.act>=0?'pos':'neg'}">${j.act==null?'—':(j.act>=0?'+':'')+j.act+'%'}</td>
+  <td class="num">${j.slip==null?'—':j.slip}</td></tr>`).join('');
+document.getElementById('mb').innerHTML=D.monthly.slice().reverse().map(m=>
+ `<tr><td>${m.m}</td>
+  <td class="num ${m.exp>=0?'pos':'neg'}">${(m.exp>=0?'+':'')+m.exp}%</td>
+  <td class="num ${m.act>=0?'pos':'neg'}">${m.act==null?'—':(m.act>=0?'+':'')+m.act+'%'}</td>
+  <td class="num">${m.days}</td><td class="num">${m.traded}</td>
+  <td class="num">${m.win==null?'—':m.win+'%'}</td></tr>`).join('');
+</script></body></html>
