@@ -4,60 +4,96 @@
 <title>Trading Portal — Top S&P Stocks Best Strategy</title>
 <style>
 .viz-root{color-scheme:light;
- --surface-1:#fcfcfb;--surface-2:#f0efec;--text-primary:#0b0b0b;
- --text-secondary:#52514e;--grid:#e4e3df;--series-1:#2a78d6;--series-2:#eb6834;
- --pos:#2a78d6;--neg:#d03b3b;--good:#0ca30c;
- font-family:system-ui,-apple-system,sans-serif;background:var(--surface-1);
- color:var(--text-primary);margin:0;padding:22px;min-height:100vh}
+ --surface-1:#fcfcfb;--surface-2:#ffffff;--surface-3:#f0efec;--text-primary:#0b0b0b;
+ --text-secondary:#52514e;--grid:#e7e6e2;--series-1:#2a78d6;--series-2:#eb6834;
+ --pos:#2a78d6;--neg:#d03b3b;--good:#0ca30c;--accent:linear-gradient(135deg,#2a78d6,#4a3aa7);
+ --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(20,30,50,.06);
+ font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+ background:
+   radial-gradient(1100px 500px at 85% -10%, rgba(42,120,214,.07), transparent 60%),
+   radial-gradient(900px 400px at -10% 110%, rgba(74,58,167,.05), transparent 60%),
+   var(--surface-1);
+ color:var(--text-primary);margin:0;padding:26px clamp(14px,4vw,48px);min-height:100vh}
 @media (prefers-color-scheme: dark){:root:where(:not([data-theme="light"])) .viz-root{
- color-scheme:dark;--surface-1:#1a1a19;--surface-2:#262624;--text-primary:#fff;
- --text-secondary:#c3c2b7;--grid:#33332f;--series-1:#3987e5;--series-2:#d95926}}
-:root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#1a1a19;
- --surface-2:#262624;--text-primary:#fff;--text-secondary:#c3c2b7;--grid:#33332f;
- --series-1:#3987e5;--series-2:#d95926}
-h1{font-size:19px;margin:0 0 2px}
-.sub{color:var(--text-secondary);font-size:12px;margin-bottom:14px}
-.tabs{display:flex;gap:6px;margin-bottom:18px}
-.tab{background:var(--surface-2);border:1px solid var(--grid);cursor:pointer;
- padding:8px 18px;border-radius:8px;font-size:13px;color:var(--text-secondary)}
-.tab.active{background:var(--series-1);color:#fff;border-color:var(--series-1)}
-.pane{display:none}.pane.active{display:block}
-.row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.tile{background:var(--surface-2);border-radius:10px;padding:12px 16px;min-width:140px}
-.tile .k{font-size:10px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em}
-.tile .v{font-size:24px;font-weight:650;margin-top:3px}
-.tile .h{font-size:11px;color:var(--text-secondary);margin-top:2px}
-.card{background:var(--surface-2);border-radius:10px;padding:14px 16px;margin-bottom:16px}
-.card h2{font-size:12px;margin:0 0 8px;color:var(--text-secondary);
- text-transform:uppercase;letter-spacing:.05em}
+ color-scheme:dark;--surface-1:#161615;--surface-2:#1f1f1e;--surface-3:#292927;
+ --text-primary:#fff;--text-secondary:#c3c2b7;--grid:#34342f;--series-1:#3987e5;
+ --series-2:#d95926;--shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35)}}
+:root[data-theme="dark"] .viz-root{color-scheme:dark;--surface-1:#161615;
+ --surface-2:#1f1f1e;--surface-3:#292927;--text-primary:#fff;--text-secondary:#c3c2b7;
+ --grid:#34342f;--series-1:#3987e5;--series-2:#d95926;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35)}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;
+ gap:10px;margin-bottom:6px}
+h1{font-size:clamp(20px,3vw,27px);margin:0;letter-spacing:-.02em;
+ background:var(--accent);-webkit-background-clip:text;background-clip:text;
+ -webkit-text-fill-color:transparent}
+.live{display:inline-flex;align-items:center;gap:7px;background:var(--surface-2);
+ border:1px solid var(--grid);border-radius:99px;padding:5px 13px;font-size:12px;
+ font-weight:600;box-shadow:var(--shadow)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);
+ animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(12,163,12,.5)}70%{box-shadow:0 0 0 7px rgba(12,163,12,0)}100%{box-shadow:0 0 0 0 rgba(12,163,12,0)}}
+.sub{color:var(--text-secondary);font-size:12.5px;margin:4px 0 18px}
+.tabs{display:inline-flex;background:var(--surface-3);border-radius:12px;padding:4px;
+ gap:2px;margin-bottom:20px;box-shadow:inset 0 1px 2px rgba(0,0,0,.04)}
+.tab{cursor:pointer;padding:8px 22px;border-radius:9px;font-size:13.5px;font-weight:550;
+ color:var(--text-secondary);transition:all .15s;border:none;background:transparent}
+.tab.active{background:var(--surface-2);color:var(--text-primary);box-shadow:var(--shadow)}
+.pane{display:none;animation:fade .25s ease}
+.pane.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;
+ margin-bottom:20px}
+.tile{background:var(--surface-2);border:1px solid var(--grid);border-radius:14px;
+ padding:14px 16px 12px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+ background:var(--accent)}
+.tile .k{font-size:10.5px;color:var(--text-secondary);text-transform:uppercase;
+ letter-spacing:.07em;font-weight:600}
+.tile .v{font-size:26px;font-weight:700;margin-top:4px;letter-spacing:-.02em;
+ font-variant-numeric:tabular-nums}
+.tile .h{font-size:11.5px;color:var(--text-secondary);margin-top:3px}
+.card{background:var(--surface-2);border:1px solid var(--grid);border-radius:16px;
+ padding:18px 20px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2{font-size:11.5px;margin:0 0 12px;color:var(--text-secondary);
+ text-transform:uppercase;letter-spacing:.08em;font-weight:650}
 svg{display:block;width:100%}
 .gridline{stroke:var(--grid);stroke-width:1}
 .axis{fill:var(--text-secondary);font-size:10px}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{color:var(--text-secondary);text-align:left;font-weight:500;font-size:10px;
- text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--grid)}
-td{padding:6px 8px;border-bottom:1px solid var(--grid)}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-.bar-track{background:var(--grid);border-radius:4px;height:8px;overflow:hidden;margin-top:5px}
-.bar-fill{height:100%;border-radius:4px;background:var(--series-1)}
+th{color:var(--text-secondary);text-align:left;font-weight:600;font-size:10.5px;
+ text-transform:uppercase;letter-spacing:.06em;padding:8px 10px;
+ border-bottom:1px solid var(--grid)}
+td{padding:8px 10px;border-bottom:1px solid var(--grid)}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--surface-3)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:550}
+.bar-track{background:var(--surface-3);border-radius:6px;height:9px;overflow:hidden;margin-top:6px}
+.bar-fill{height:100%;border-radius:6px;background:var(--accent);
+ transition:width .6s ease}
 .tip{position:fixed;pointer-events:none;background:var(--text-primary);
- color:var(--surface-1);padding:6px 9px;border-radius:6px;font-size:12px;
- opacity:0;transition:opacity .08s;z-index:9;white-space:nowrap}
-.toggle{position:absolute;top:20px;right:22px;background:var(--surface-2);
- border:1px solid var(--grid);color:var(--text-primary);border-radius:8px;
- padding:5px 11px;cursor:pointer;font-size:12px}
-.legend{display:flex;gap:14px;font-size:11px;color:var(--text-secondary);margin-bottom:6px}
-.legend span::before{content:"";display:inline-block;width:10px;height:10px;
- border-radius:3px;margin-right:5px;vertical-align:-1px}
+ color:var(--surface-1);padding:7px 11px;border-radius:8px;font-size:12px;
+ opacity:0;transition:opacity .1s;z-index:9;white-space:nowrap;box-shadow:var(--shadow)}
+.toggle{position:absolute;top:24px;right:clamp(14px,4vw,48px);background:var(--surface-2);
+ border:1px solid var(--grid);color:var(--text-primary);border-radius:10px;
+ padding:6px 13px;cursor:pointer;font-size:13px;box-shadow:var(--shadow)}
+.legend{display:flex;gap:16px;font-size:11.5px;color:var(--text-secondary);margin-bottom:8px}
+.legend span::before{content:"";display:inline-block;width:11px;height:11px;
+ border-radius:3.5px;margin-right:6px;vertical-align:-1.5px}
 .legend .l1::before{background:var(--series-1)}.legend .l2::before{background:var(--series-2)}
 .pos{color:var(--good)}.neg{color:var(--neg)}
-.rules{font-size:13px;line-height:1.55}
-.rules code{background:var(--surface-1);padding:1px 5px;border-radius:4px}
+.rules{font-size:13.5px;line-height:1.65}
+.rules b{letter-spacing:-.01em}
+.foot{color:var(--text-secondary);font-size:11.5px;margin-top:22px;
+ padding-top:14px;border-top:1px solid var(--grid)}
 </style></head>
 <body class="viz-root">
 <button class="toggle" onclick="tog()">◐</button>
-<h1>📊 Top S&amp;P Stocks Best Strategy — Paper Phase</h1>
-<div class="sub">frozen 2026-09-02 · causal · Alpaca paper live · updated 2026-09-05 07:31</div>
+<div class="hero">
+ <h1>Top S&amp;P Stocks — Best Strategy</h1>
+ <span class="live"><span class="dot"></span>PAPER LIVE</span>
+</div>
+<div class="sub">frozen 2026-09-02 · causal · Alpaca paper account · auto-updated 2026-09-07 04:56</div>
 <div class="tabs">
  <div class="tab active" data-p="daily" onclick="show('daily')">Daily</div>
  <div class="tab" data-p="monthly" onclick="show('monthly')">Monthly</div>
@@ -109,9 +145,12 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   vol-scaling · sector caps. <b>The edge is the unadorned rank-and-hold.</b></p></div>
 </div>
 
+<div class="foot">Automated end-of-day publishing · expected = frozen model on Alpaca data,
+actual = real paper fills · a red day or month is expected behavior; the verdict comes from the
+6-month gate, not any single stretch.</div>
 <div class="tip" id="tip"></div>
 <script>
-const D = {"updated": "2026-09-05 07:31", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": -0.138, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": -0.14, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 1, "trades": 5, "exp_pnl": 0.87, "act_pnl": -0.14, "avg_slip": null, "ref_mean_bps": 10.7}};
+const D = {"updated": "2026-09-07 04:56", "journal": [{"date": "2026-09-01", "picks": "AMD", "exp": -0.044, "act": null, "slip": null}, {"date": "2026-09-02", "picks": "NOW;PLD;AMT;PLTR", "exp": 0.916, "act": null, "slip": null}, {"date": "2026-09-03", "picks": "nan", "exp": 0.0, "act": -0.138, "slip": null}], "monthly": [{"m": "2026-09", "exp": 0.87, "act": -0.14, "days": 3, "traded": 2, "win": 33.0}], "stats": {"sessions": 3, "live_sessions": 1, "trades": 5, "exp_pnl": 0.87, "act_pnl": -0.14, "avg_slip": null, "ref_mean_bps": 10.7}};
 function tog(){const r=document.documentElement;
  r.dataset.theme = r.dataset.theme==='dark'?'light':'dark';}
 function show(p){document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
